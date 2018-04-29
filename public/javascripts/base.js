@@ -2,7 +2,7 @@ console.log("Hi!");
 (function(){
   var socket, sid;
   var done = false, histored;
-  socket = io.connect('http://localhost:8081');
+  socket = io.connect(location.origin);
   socket
   .on('handshake', function(data) {
     sid = data.sid;

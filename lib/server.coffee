@@ -216,48 +216,62 @@ getHistory = (accId, limit = 10, cb) ->
     return # `network` handler
   return # getHistory
 
-tryTransaction = (cb) ->
-  tr = new TransactionBuilder
-  tr.add_type_operation 'transfer',
-    fee:
-      amount: 0
-      asset_id: "1.3.0"
-    from: "1.2.146"
-    to: "1.2.21"
-    amount: { amount: 50000, asset_id: "1.3.0" }
-    memo:
-      from: "KRMT6vmvqxRNWVkzbxGngwHd78RagUZKVe8Ws6CJ1QZpqrxZ5WKmRe"
-      to: "KRMT54jpAy28X7dPrKKZzCibgUFgPH4cNAGuRmsxvzKqEzFyxwhzdS"
-      nonce: 0
-      message: ""
-  tr.set_required_fees()
-  .then ->
-    keys = Login.generateKeys 'l0uter', 'hanter&bb+cc'
-    tr.add_signer keys.privKeys.active, keys.pubKeys.active
-    #tr.add_signer keys.privKeys.owner, keys.pubKeys.owner
-    #tr.add_signer keys.privKeys.memo, keys.pubKeys.memo
-    tr.get_potential_signatures()
-    .then (ref) ->
-      { pubkeys } = ref
-      tr.get_required_signatures(pubkeys)
+tryTransaction = (from, to, volume, password, cb) ->
+  getUserByName to, (err, toUser) ->
+    if err?
+      cb err
+      return
+    getUserByName from, (err2, fromUser) ->
+      if err2?
+        cb err2
+        return
+      volume = parseFloat(volume) * 100000
+      tr = new TransactionBuilder
+      tr.add_type_operation 'transfer',
+        fee:
+          amount: 0
+          asset_id: "1.3.0"
+        from: fromUser.id
+        to: toUser.id
+        amount: { amount: volume, asset_id: "1.3.0" }
+        memo:
+          from: fromUser.options.memo_key
+          to: toUser.options.memo_key
+          nonce: 0
+          message: ""
+      tr.set_required_fees()
       .then ->
-        tr.broadcast()
-        .then (data) ->
-          console.log "TR SUCCESS:\n", data
-          return
+        keys = Login.generateKeys fromUser.name, password
+        tr.add_signer keys.privKeys.active, keys.pubKeys.active
+        tr.get_potential_signatures()
+        .then (ref) ->
+          { pubkeys } = ref
+          tr.get_required_signatures(pubkeys)
+          .then ->
+            tr.broadcast()
+            .then (data) ->
+              console.log "TR SUCCESS:\n", data
+              cb null, data
+              return
+            .catch (err) ->
+              console.error "broadcast error:\n", err
+              cb err
+              return
+            return
+          .catch (err) ->
+            console.error "get_required_signatures error:\n", err
+            cb err
+            return
         .catch (err) ->
-          console.error "broadcast error:\n", err
+          console.error "get_potential_signatures error:\n", err
+          cb err
           return
         return
       .catch (err) ->
-        console.error "get_required_signatures error:\n", err
+        console.error "set_required_fees error:\n", err
+        cb err
         return
-    .catch (err) ->
-      console.error "get_potential_signatures error:\n", err
       return
-    return
-  .catch (err) ->
-    console.error "set_required_fees error:\n", err
     return
   return
 

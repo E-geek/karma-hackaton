@@ -70,6 +70,15 @@ console.log("Hi!");
       histored = true;
       return;
     }
+
+    if (data.type === 'send') {
+      waitLoad.style.display = '';
+      if (data.error) {
+        alert('Не удалось отправить');
+      } else {
+        alert('Успех!');
+      }
+    }
   });
 
   var loginForm, submitButton;
@@ -85,4 +94,21 @@ console.log("Hi!");
   };
   submitButton = loginForm.querySelector('.js-submit');
   submitButton.onclick = loginForm.onsubmit;
+
+  var sendForm, sendButton, waitLoad;
+  waitLoad = document.querySelector('.js-wait-load');
+  sendForm = document.querySelector('.js-send-money');
+  sendButton = sendForm.querySelector('button');
+  sendForm.onsubmit = function (e) {
+    e.preventDefault();
+    waitLoad.style.display = 'block';
+    socket.emit('req', {
+      sid: sid,
+      type: 'send',
+      to: sendForm[0].value,
+      volume: sendForm[1].value
+    });
+    return false;
+  };
+  sendButton.onclick = sendForm.onsubmit;
 })();

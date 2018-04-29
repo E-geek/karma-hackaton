@@ -46,7 +46,29 @@ module.exports = (io) -> io.on 'connection', (socket) ->
         getBalance socket, user
       when 'history'
         getHistory data.limit, socket, user
+      when 'send'
+        sendMoney data, socket, user, pass
     return
+
+sendMoney = (data, socket, user, pass) ->
+  if user is null
+    socket.emit 'res',
+      type: 'send'
+      error: 'no auth'
+    return
+  server.tryTransaction user.name, data.to, data.volume, pass, (err, data) ->
+    if err?
+      console.error 'SEND has fail', err
+      socket.emit 'res',
+        type: 'send'
+        error: err
+      return
+    socket.emit 'res',
+      type: 'send'
+      result: data
+    return
+  return
+
 
 getBalance = (socket, user) ->
   if user is null

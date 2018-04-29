@@ -61,7 +61,7 @@ html(lang='')
           a.mdl-layout__tab.is-active(href='#balance') Баланс
           a.mdl-layout__tab(href='#send') Отправить
           a.mdl-layout__tab(href='#receive') Пополнить
-          a.mdl-layout__tab(href='#list') Список операций
+          a.mdl-layout__tab.js-task-list(href='#list') Список операций
           a.mdl-layout__tab(href='#faq') ЧаВо
       main.mdl-layout__content
         #balance.mdl-layout__tab-panel.is-active
@@ -72,7 +72,7 @@ html(lang='')
                   h4.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone Баланс (KRMT):
                   h4.mdl-cell.mdl-cell--8-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone 435.8547168
                 .mdl-cell.mdl-cell--12-col(style='padding-top: 24px;')
-                  button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect
+                  button.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--colored.mdl-js-ripple-effect(onclick='alert("Заработает потом")')
                     | Пополнить
           section.section--center.mdl-grid.mdl-grid--no-spacing.mdl-shadow--2dp
             .mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing(style='margin: 24px 40px;')
@@ -90,11 +90,11 @@ html(lang='')
                   td 3.78491350
                   td 27.09.2018 18:35:11
             .mdl-card__actions
-              a.mdl-button(href='#list') Показать больше
+              a.mdl-button(href='#list' onclick='document.querySelector(".js-task-list").click()') Показать больше
         #send.mdl-layout__tab-panel
           section.section--center.mdl-grid.mdl-grid--no-spacing
             .mdl-layout--large-screen-only.mdl-cell.mdl-cell--2-col
-            form.mdl-cell.mdl-cell--8-col.mdl-shadow--2dp(action='#')
+            form.mdl-cell.mdl-cell--8-col.mdl-shadow--2dp.js-send-money(action='#')
               .mdl-card__supporting-text.mdl-grid.mdl-cell--12-col
                 .mdl-cell.mdl-cell--10-col.mdl-cell--3-col-phone
                   .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
@@ -105,7 +105,7 @@ html(lang='')
                   //  | Найти
                 .mdl-cell.mdl-cell--10-col.mdl-cell--3-col-phone
                   .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                    input#send-quantity.mdl-textfield__input(type='number')
+                    input#send-quantity.mdl-textfield__input(type='text')
                     label.mdl-textfield__label(for='send-quantity') Сколько
                 .mdl-cell.mdl-cell--2-col.mdl-cell--1-col-phone.mdl-cell--middle
                 .mdl-cell.mdl-cell--12-col
@@ -116,11 +116,12 @@ html(lang='')
                   button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--colored
                     | Отправить
                 .mdl-cell.mdl-cell--6-col.mdl-cell--4-col-tablet.mdl-cell--2-col-phone
-                  button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect
+                  button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect(style='visibility:hidden')
                     | Сохранить шаблон
             .mdl-layout--large-screen-only.mdl-cell.mdl-cell--2-col
         #receive.mdl-layout__tab-panel
           section.section--center.mdl-grid.mdl-grid--no-spacing
+            h3.mdl-cell.mdl-cell--12-col Этот раздел не сделан =(
         #list.mdl-layout__tab-panel
           section.section--center.mdl-grid.mdl-grid--no-spacing.mdl-shadow--2dp
             .mdl-card__supporting-text.mdl-grid.mdl-grid--no-spacing(style='margin: 24px 40px;')
@@ -140,6 +141,12 @@ html(lang='')
               a.mdl-button(href='#list') Показать больше
         #faq.mdl-layout__tab-panel
           section.section--center.mdl-grid.mdl-grid--no-spacing
+            h3.mdl-cell.mdl-cell--12-col ЧаВо
+            p
+              | Не хватает времени сделать очень много чего. Основное время ушло на войнус АПИ.
+              | Например отслеживание изменения баланса, конвертер валют сюда сразу же,
+              | приём крипты и более разумная авторизация
+            p Но это весьма познавательно! =)
         footer.mdl-mega-footer
           .mdl-mega-footer--middle-section
             .mdl-mega-footer--drop-down-section
@@ -188,6 +195,10 @@ html(lang='')
                   a(href='#') Ответы
                 li
                   a(href='#') Всякое
+
+    .wait-load.js-wait-load
+      .mdl-grid.mdl-cell
+        .mdl-cell--middle.mdl-progress.mdl-js-progress.mdl-progress__indeterminate
 
     script(src='https://code.getmdl.io/1.2.1/material.min.js')
     // build:js scripts/main.min.js

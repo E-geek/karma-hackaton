@@ -1,0 +1,21 @@
+{
+  "name": "karma-out",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "coffee-script": "^1.12.7",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "karmajs": "^0.2.50",
+    "karmajs-ws": "^0.1.5",
+    "morgan": "~1.9.0",
+    "node-sass-middleware": "0.11.0",
+    "socket.io": "^2.1.0"
+  }
+}
